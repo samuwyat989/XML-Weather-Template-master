@@ -29,11 +29,12 @@ namespace XMLWeather
         SolidBrush lighGrayBrush = new SolidBrush(Color.LightGray);
         GraphicsPath weatherPath = new GraphicsPath();
         Font topFont = new Font("Calibri", 14);
-        Font screenFont = new Font("Calibri", 12);
+        Font screenFont = new Font("Calibri", 14);
         int iconRingRadius = 64, topBarHeight = 60, circleSpacing = 30, 
             ringStartX = -55, ringStartY = 165, ringStartRadius = 330;
         Point[] orbitCircles = new Point[4];
         string currentTemp, country, humidity, windSpeed, conditions;
+        bool workAround = true;
         Region forcastClick = new Region();
 
         public void DisplayCurrent()
@@ -48,6 +49,8 @@ namespace XMLWeather
             conditions = conditions.Remove(0,1);
             conditions = conditions.Insert(0, upper);
 
+            locationBox.Location = new Point(260, 15);
+            cityBox.Location = new Point(130, 15);
             forcastClick = new Region(new Rectangle(this.Width * 3 / 4 - 55, topBarHeight + 12, 70, 35));
 
             weatherImageBox.Location = new Point(ringStartX + circleSpacing, ringStartY + circleSpacing);
@@ -102,6 +105,36 @@ namespace XMLWeather
             humidityBox.Region = new Region(orbitRegions);
         }
 
+        private void cityBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                workAround = false;
+                locationBox.Visible = false;
+                Form1.cityName = cityBox.Text;
+                //Form1.for
+                Form1.days.Clear();
+                Form1.GetData();
+                Form1.ExtractCurrent();
+                Form1.ExtractForecast();
+                workAround = true;
+                DisplayCurrent();
+                Refresh();
+            }
+        }
+
+        private void locationBox_Click(object sender, EventArgs e)
+        {
+            if (cityBox.Visible)
+            {
+                cityBox.Visible = false;
+            }
+            else
+            {
+                cityBox.Visible = true;
+            }
+        }
+
         private void CurrentScreen_MouseDown(object sender, MouseEventArgs e)
         {
             Graphics g = this.CreateGraphics();
@@ -122,71 +155,74 @@ namespace XMLWeather
 
         private void CurrentScreen_Paint(object sender, PaintEventArgs e)
         {
-            //top bar
-            e.Graphics.FillRectangle(midBlueBrush, 5, 5, this.Width - 10, topBarHeight);
-            e.Graphics.FillRectangle(lightBlueBrush, 5, topBarHeight+12, this.Width - 10, 35);
-            e.Graphics.DrawString("Today", topFont, midBlueBrush, this.Width / 4 - 10, topBarHeight + 18);
-            e.Graphics.DrawString("Forecast", topFont, midBlueBrush, this.Width *3 / 4 -55, topBarHeight + 18);
-            e.Graphics.DrawLine(dayUnderline, new Point(this.Width / 4 - 10, topBarHeight + 40), new Point(this.Width / 4 + 45, topBarHeight + 40));           
-
-            //circles
-            e.Graphics.DrawEllipse(silverPen, ringStartX - circleSpacing * 3 / 2, ringStartY - circleSpacing * 3 / 2, 420, 420);
-            e.Graphics.FillRectangle(blueGrayBrush, -100, 118, 230, 425);
-            e.Graphics.FillEllipse(lighGrayBrush, ringStartX, ringStartY, ringStartRadius, ringStartRadius);
-            e.Graphics.FillEllipse(silverBrush, ringStartX + circleSpacing / 2, ringStartY + circleSpacing / 2,
-                ringStartRadius - circleSpacing, ringStartRadius - circleSpacing);
-
-            //orbiting circles
-            foreach(Point p in orbitCircles)
+            if (workAround)
             {
-                e.Graphics.FillEllipse(midBlueBrush, p.X, p.Y, iconRingRadius, iconRingRadius);
+                //top bar
+                e.Graphics.FillRectangle(midBlueBrush, 5, 5, this.Width - 10, topBarHeight);
+                e.Graphics.FillRectangle(lightBlueBrush, 5, topBarHeight + 12, this.Width - 10, 35);
+                e.Graphics.DrawString("Today", topFont, midBlueBrush, this.Width / 4 - 10, topBarHeight + 18);
+                e.Graphics.DrawString("Forecast", topFont, midBlueBrush, this.Width * 3 / 4 - 55, topBarHeight + 18);
+                e.Graphics.DrawLine(dayUnderline, new Point(this.Width / 4 - 10, topBarHeight + 40), new Point(this.Width / 4 + 45, topBarHeight + 40));
+
+                //circles
+                e.Graphics.DrawEllipse(silverPen, ringStartX - circleSpacing * 3 / 2, ringStartY - circleSpacing * 3 / 2, 420, 420);
+                e.Graphics.FillRectangle(blueGrayBrush, -100, 118, 230, 425);
+                e.Graphics.FillEllipse(lighGrayBrush, ringStartX, ringStartY, ringStartRadius, ringStartRadius);
+                e.Graphics.FillEllipse(silverBrush, ringStartX + circleSpacing / 2, ringStartY + circleSpacing / 2,
+                    ringStartRadius - circleSpacing, ringStartRadius - circleSpacing);
+
+                //orbiting circles
+                foreach (Point p in orbitCircles)
+                {
+                    e.Graphics.FillEllipse(midBlueBrush, p.X, p.Y, iconRingRadius, iconRingRadius);
+                }
+
+                //city
+                e.Graphics.DrawString(Form1.days[0].location + ", " + country, new Font("Calibri", 16, FontStyle.Bold), darkBlueBrush, this.Width - 130, 10);
+
+                //time
+                e.Graphics.DrawString(DateTime.Now.ToString("dddd,"), topFont, darkBlueBrush, 10, 10);
+                e.Graphics.DrawString(DateTime.Now.ToString("MMMM dd"), topFont, darkBlueBrush, 10, 30);
+
+                //sunrise/sunset
+                e.Graphics.DrawString(Form1.days[0].sunrise.ToString("hh : m") + " AM", topFont, darkBlueBrush,
+                    orbitCircles[0].X + iconRingRadius, orbitCircles[0].Y);
+                e.Graphics.DrawString(Form1.days[0].sunset.ToString("hh : m") + " PM", topFont, darkBlueBrush,
+                    orbitCircles[1].X + iconRingRadius, orbitCircles[1].Y);
+
+                //messages 
+                e.Graphics.DrawString("Sunrise", screenFont, darkGreyBrush, orbitCircles[0].X + iconRingRadius, orbitCircles[0].Y + 20);
+                e.Graphics.DrawString("Sunset", screenFont, darkGreyBrush, orbitCircles[1].X + iconRingRadius, orbitCircles[1].Y + 20);
+                e.Graphics.DrawString("Humidity", screenFont, darkGreyBrush, orbitCircles[2].X + iconRingRadius, orbitCircles[2].Y + 20);
+                e.Graphics.DrawString("Wind Speed", screenFont, darkGreyBrush, orbitCircles[3].X + iconRingRadius, orbitCircles[3].Y + 20);
+
+
+                //humidity 
+                e.Graphics.DrawString(humidity + " %", topFont, darkBlueBrush,
+                    orbitCircles[2].X + iconRingRadius, orbitCircles[2].Y);
+
+                //wind speed
+                e.Graphics.DrawString(windSpeed + " m/s", topFont, darkBlueBrush,
+                    orbitCircles[3].X + iconRingRadius, orbitCircles[3].Y);
+
+                //conditions
+                if (conditions.Length < 10)
+                {
+                    e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 88, 30);
+                }
+                else if (conditions.Length == 10)
+                {
+                    e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 105, 30);
+                }
+                else if (conditions.Length >= 16)
+                {
+                    e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 140, 30);
+                }
+                else
+                {
+                    e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 135, 30);
+                }
             }
-
-            //city
-            e.Graphics.DrawString(Form1.days[0].location + ", " + country, new Font("Calibri", 16, FontStyle.Bold), darkBlueBrush, this.Width - 130, 10);
-
-            //time
-            e.Graphics.DrawString(DateTime.Now.ToString("dddd,"), topFont, darkBlueBrush, 10, 10);
-            e.Graphics.DrawString(DateTime.Now.ToString("MMMM dd"), topFont, darkBlueBrush, 10, 30);
-
-            //sunrise/sunset
-            e.Graphics.DrawString(Form1.days[0].sunrise.ToString("hh : m") + " AM", topFont, darkBlueBrush,
-                orbitCircles[0].X + iconRingRadius, orbitCircles[0].Y);
-            e.Graphics.DrawString(Form1.days[0].sunset.ToString("hh : m") + " PM", topFont, darkBlueBrush,
-                orbitCircles[1].X + iconRingRadius, orbitCircles[1].Y);
-
-            //messages 
-            e.Graphics.DrawString("Sunrise", screenFont, darkGreyBrush, orbitCircles[0].X + iconRingRadius, orbitCircles[0].Y+20);
-            e.Graphics.DrawString("Sunset", screenFont, darkGreyBrush, orbitCircles[1].X + iconRingRadius, orbitCircles[1].Y + 20);
-            e.Graphics.DrawString("Humidity", screenFont, darkGreyBrush, orbitCircles[2].X + iconRingRadius, orbitCircles[2].Y + 20);
-            e.Graphics.DrawString("Wind Speed", screenFont, darkGreyBrush, orbitCircles[3].X + iconRingRadius, orbitCircles[3].Y + 20);
-
-
-            //humidity 
-            e.Graphics.DrawString(humidity + " %", topFont, darkBlueBrush, 
-                orbitCircles[2].X + iconRingRadius, orbitCircles[2].Y);
-
-            //wind speed
-            e.Graphics.DrawString(windSpeed + " m/s", topFont, darkBlueBrush,
-                orbitCircles[3].X + iconRingRadius, orbitCircles[3].Y);
-            
-            //conditions
-            if (conditions.Length < 10)
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width-88, 30);           
-            }
-            else if (conditions.Length == 10)
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 105, 30);
-            }
-            else if (conditions.Length >=16)
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 140, 30);
-            }
-            else
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width-135, 30);
-            }     
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)

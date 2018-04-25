@@ -83,6 +83,16 @@ namespace XMLWeather.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap locationIcon {
+            get {
+                object obj = ResourceManager.GetObject("locationIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PartlyCloudy {
             get {
                 object obj = ResourceManager.GetObject("PartlyCloudy", resourceCulture);

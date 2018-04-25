@@ -173,7 +173,7 @@ namespace XMLWeather
                 e.Graphics.DrawString("°C", new Font("Calibri", 12), midBlueBrush,
                    foreCastRegions[i - 1].GetBounds(g).X + 80, foreCastRegions[i - 1].GetBounds(g).Y + 25);
                 e.Graphics.DrawString("°C", new Font("Calibri", 12), midBlueBrush,
-                   foreCastRegions[i - 1].GetBounds(g).X + 170, foreCastRegions[i - 1].GetBounds(g).Y + 25);
+                   foreCastRegions[i - 1].GetBounds(g).X + 180, foreCastRegions[i - 1].GetBounds(g).Y + 25);
 
                 e.Graphics.DrawString(Form1.days.Last().foreCastDates[i - 1].ToString("ddd").ToUpper(), new Font("Calibri", 12), midBlueBrush,
                        foreCastRegions[i - 1].GetBounds(g).X + 350, foreCastRegions[i - 1].GetBounds(g).Y + 75);

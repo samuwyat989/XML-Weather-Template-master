@@ -16,6 +16,7 @@ namespace XMLWeather
         //create list to hold day objects
         public static List<Day> days = new List<Day>();
         Day d = new Day();
+        public static string cityName = "Stratford,CA";
 
         public Form1()
         {
@@ -29,20 +30,24 @@ namespace XMLWeather
             this.Controls.Add(cs);
         }
 
-        private static void GetData()
+        public static void GetData()
         {
             WebClient client = new WebClient();
 
+            string currentExtract = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName +"&mode=xml&units=metric&appid=3f2e224b815c0ed45524322e145149f0";
+            string forecastExtract = "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + cityName + "&mode=xml&units=metric&cnt=7&appid=3f2e224b815c0ed45524322e145149f0";
+
+
             // one day forecast
-            client.DownloadFile("http://api.openweathermap.org/data/2.5/weather?q=Stratford,CA&mode=xml&units=metric&appid=3f2e224b815c0ed45524322e145149f0", "WeatherData.xml");
+            client.DownloadFile(currentExtract, "WeatherData.xml");
             // mulit day forecast
-            client.DownloadFile("http://api.openweathermap.org/data/2.5/forecast/daily?q=Stratford,CA&mode=xml&units=metric&cnt=7&appid=3f2e224b815c0ed45524322e145149f0", "WeatherData7Day.xml");
+            client.DownloadFile(forecastExtract, "WeatherData7Day.xml");
 
             //Current Screen https://dribbble.com/shots/578998-Weather-App-washing-machine
             //Forecast Screen https://www.behance.net/gallery/9650557/iOS7-Weather-App
         }
 
-        private void ExtractCurrent()
+        public static void ExtractCurrent()
         {
             XmlDocument doc = new XmlDocument();
             doc.Load("WeatherData.xml");
@@ -73,7 +78,7 @@ namespace XMLWeather
             days.Add(d);
         }
               
-        private void ExtractForecast()
+        public static void ExtractForecast()
         {
             List<string> dates = new List<string>();
 
@@ -84,6 +89,8 @@ namespace XMLWeather
             XmlNodeList tempList = doc.GetElementsByTagName("temperature");
             XmlNodeList cloudsList = doc.GetElementsByTagName("clouds");
             XmlNodeList precipList = doc.GetElementsByTagName("precipitation");
+
+            Day d = new Day();
 
             for (int i = 1; i < tempList.Count; i++)//start at 1 to skip todays forcast
             {
