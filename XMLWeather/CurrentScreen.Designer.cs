@@ -47,7 +47,7 @@
             // 
             this.locationBox.BackColor = System.Drawing.Color.Transparent;
             this.locationBox.Image = global::XMLWeather.Properties.Resources.locationIcon;
-            this.locationBox.Location = new System.Drawing.Point(30, 270);
+            this.locationBox.Location = new System.Drawing.Point(409, 150);
             this.locationBox.Name = "locationBox";
             this.locationBox.Size = new System.Drawing.Size(50, 50);
             this.locationBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -58,7 +58,7 @@
             // windSpeedBox
             // 
             this.windSpeedBox.Image = global::XMLWeather.Properties.Resources.windSpeedIcon;
-            this.windSpeedBox.Location = new System.Drawing.Point(196, 57);
+            this.windSpeedBox.Location = new System.Drawing.Point(466, 109);
             this.windSpeedBox.Name = "windSpeedBox";
             this.windSpeedBox.Size = new System.Drawing.Size(171, 171);
             this.windSpeedBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -68,7 +68,7 @@
             // humidityBox
             // 
             this.humidityBox.Image = global::XMLWeather.Properties.Resources.humidityIcon;
-            this.humidityBox.Location = new System.Drawing.Point(373, 57);
+            this.humidityBox.Location = new System.Drawing.Point(465, 286);
             this.humidityBox.Name = "humidityBox";
             this.humidityBox.Size = new System.Drawing.Size(171, 171);
             this.humidityBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -78,7 +78,7 @@
             // sunsetBox
             // 
             this.sunsetBox.Image = global::XMLWeather.Properties.Resources.sunsetIcon;
-            this.sunsetBox.Location = new System.Drawing.Point(124, 245);
+            this.sunsetBox.Location = new System.Drawing.Point(466, 639);
             this.sunsetBox.Name = "sunsetBox";
             this.sunsetBox.Size = new System.Drawing.Size(171, 171);
             this.sunsetBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -88,7 +88,7 @@
             // sunriseBox
             // 
             this.sunriseBox.Image = global::XMLWeather.Properties.Resources.sunriseIcon;
-            this.sunriseBox.Location = new System.Drawing.Point(20, 57);
+            this.sunriseBox.Location = new System.Drawing.Point(466, 463);
             this.sunriseBox.Name = "sunriseBox";
             this.sunriseBox.Size = new System.Drawing.Size(170, 170);
             this.sunriseBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -97,23 +97,26 @@
             // 
             // weatherImageBox
             // 
+            this.weatherImageBox.BackColor = System.Drawing.Color.Transparent;
             this.weatherImageBox.Image = global::XMLWeather.Properties.Resources.RainDrops;
-            this.weatherImageBox.Location = new System.Drawing.Point(66, 422);
+            this.weatherImageBox.Location = new System.Drawing.Point(29, 206);
             this.weatherImageBox.Name = "weatherImageBox";
             this.weatherImageBox.Size = new System.Drawing.Size(431, 382);
             this.weatherImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.weatherImageBox.TabIndex = 45;
             this.weatherImageBox.TabStop = false;
-            this.weatherImageBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            this.weatherImageBox.Paint += new System.Windows.Forms.PaintEventHandler(this.weatherImageBox_Paint);
             // 
             // cityBox
             // 
             this.cityBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cityBox.Location = new System.Drawing.Point(327, 360);
+            this.cityBox.Location = new System.Drawing.Point(281, 109);
             this.cityBox.Name = "cityBox";
             this.cityBox.Size = new System.Drawing.Size(179, 35);
             this.cityBox.TabIndex = 51;
+            this.cityBox.Text = "Stratford,CA";
             this.cityBox.Visible = false;
+            this.cityBox.Click += new System.EventHandler(this.cityBox_Click);
             this.cityBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.cityBox_PreviewKeyDown);
             // 
             // CurrentScreen

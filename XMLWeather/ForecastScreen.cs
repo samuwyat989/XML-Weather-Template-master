@@ -12,15 +12,8 @@ namespace XMLWeather
 {
     public partial class ForecastScreen : UserControl
     {
-        SolidBrush blueGrayBrush = new SolidBrush(Color.FromArgb(230, 232, 233));//lig
-        SolidBrush lightBlueBrush = new SolidBrush(Color.FromArgb(178, 200, 215));
-        SolidBrush darkGreyBrush = new SolidBrush(Color.FromArgb(151, 170, 182));
-        SolidBrush midBlueBrush = new SolidBrush(Color.FromArgb(102, 146, 173));
-        SolidBrush darkBlueBrush = new SolidBrush(Color.FromArgb(17, 50, 75));
-        SolidBrush silverBrush = new SolidBrush(Color.Silver);
-        Font topFont = new Font("Calibri", 14);
-        Pen dayUnderline = new Pen(Color.FromArgb(102, 146, 173));
-        int topBarHeight = 60, topBarX = 5, topBarY = 5, screenBarHeight = 45, screenBarX = 5, screenBarY, buffer = 7;
+        int topBarHeight = 60, topBarX = 5, topBarY = 5, screenBarHeight = 45, 
+            screenBarX = 5, screenBarY, buffer = 7;
         Region currentClick = new Region();    
         List<Region> foreCastRegions = new List<Region>();
         Graphics g;
@@ -124,60 +117,47 @@ namespace XMLWeather
 
         private void ForecastScreen_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(midBlueBrush, topBarX, topBarY, this.Width - topBarX*2, topBarHeight);
-            e.Graphics.FillRectangle(lightBlueBrush, screenBarX, screenBarY, this.Width - screenBarX*2, screenBarHeight);
-            e.Graphics.DrawString("Today", topFont, midBlueBrush, this.Width / 4 - 10, topBarHeight + 20);
-            e.Graphics.DrawString("Forecast", topFont, midBlueBrush, this.Width * 3 / 4 - 55, topBarHeight + 20);
-            e.Graphics.DrawLine(dayUnderline, new Point(270, 102), new Point(340, 102));
+            e.Graphics.FillRectangle(Form1.midBlueBrush, topBarX, topBarY, this.Width - topBarX*2, topBarHeight);
+            e.Graphics.FillRectangle(Form1.lightBlueBrush, screenBarX, screenBarY, this.Width - screenBarX*2, screenBarHeight);
+            e.Graphics.DrawString("Today", Form1.screenFont, Form1.midBlueBrush, this.Width / 4 - 10, topBarHeight + 20);
+            e.Graphics.DrawString("Forecast", Form1.screenFont, Form1.midBlueBrush, this.Width * 3 / 4 - 55, topBarHeight + 20);
+            e.Graphics.DrawLine(Form1.dayUnderLine, new Point(270, 102), new Point(340, 102));
 
-            e.Graphics.DrawString(Form1.days[0].location + ", " + country, new Font("Calibri", 16, FontStyle.Bold), darkBlueBrush, this.Width - 130, 10);
-            e.Graphics.DrawString(DateTime.Now.ToString("dddd,"), topFont, darkBlueBrush, 10, 10);
-            e.Graphics.DrawString(DateTime.Now.ToString("MMMM dd"), topFont, darkBlueBrush, 10, 30);
+            int cityLength = Convert.ToInt32(e.Graphics.MeasureString(Form1.days[0].location + ", " + country, new Font("Calibri", 16, FontStyle.Bold)).Width);
+            e.Graphics.DrawString(Form1.days[0].location + ", " + country, new Font("Calibri", 16, FontStyle.Bold), Form1.darkBlueBrush, this.Width - cityLength - 10, 10);
+            e.Graphics.DrawString(DateTime.Now.ToString("dddd,"), Form1.screenFont, Form1.darkBlueBrush, 10, 10);
+            e.Graphics.DrawString(DateTime.Now.ToString("MMMM dd"), Form1.screenFont, Form1.darkBlueBrush, 10, 30);
 
-            if (conditions.Length < 10)
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 88, 30);
-            }
-            else if (conditions.Length == 10)
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 105, 30);
-            }
-            else if (conditions.Length >= 16)
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 140, 30);
-            }
-            else
-            {
-                e.Graphics.DrawString(conditions, topFont, darkBlueBrush, this.Width - 135, 30);
-            }
+            int conLength = Convert.ToInt32(e.Graphics.MeasureString(conditions, Form1.screenFont).Width);
+            e.Graphics.DrawString(conditions, Form1.screenFont, Form1.darkBlueBrush, this.Width - conLength - 15, 30);
 
             foreach (Region r in foreCastRegions)
             {
-                e.Graphics.FillRegion(silverBrush, r);
+                e.Graphics.FillRegion(Form1.silverBrush, r);
             }
 
             for (int i = 1; i < 5; i++)
             {
-                e.Graphics.DrawString(maxTemps[i], new Font("Calibri", 45), darkBlueBrush, 
+                e.Graphics.DrawString(maxTemps[i], new Font("Calibri", 45), Form1.darkBlueBrush, 
                     foreCastRegions[i-1].GetBounds(g).X+10, foreCastRegions[i - 1].GetBounds(g).Y+ 10);
                
-                e.Graphics.DrawString(minTemps[i], new Font("Calibri", 45), darkBlueBrush, 
+                e.Graphics.DrawString(minTemps[i], new Font("Calibri", 45), Form1.darkBlueBrush, 
                     foreCastRegions[i - 1].GetBounds(g).X+ 130, foreCastRegions[i - 1].GetBounds(g).Y+10);
 
-                e.Graphics.DrawString("Max", new Font("Calibri", 16), midBlueBrush,
+                e.Graphics.DrawString("Max", new Font("Calibri", 16), Form1.midBlueBrush,
                     foreCastRegions[i - 1].GetBounds(g).X + 30, foreCastRegions[i - 1].GetBounds(g).Y + 70);
 
-                e.Graphics.DrawString("Min", new Font("Calibri", 16), midBlueBrush,
+                e.Graphics.DrawString("Min", new Font("Calibri", 16), Form1.midBlueBrush,
                     foreCastRegions[i - 1].GetBounds(g).X + 150, foreCastRegions[i - 1].GetBounds(g).Y + 70);
 
-                e.Graphics.DrawString("°C", new Font("Calibri", 12), midBlueBrush,
+                e.Graphics.DrawString("°C", new Font("Calibri", 12), Form1.midBlueBrush,
                    foreCastRegions[i - 1].GetBounds(g).X + 80, foreCastRegions[i - 1].GetBounds(g).Y + 25);
-                e.Graphics.DrawString("°C", new Font("Calibri", 12), midBlueBrush,
-                   foreCastRegions[i - 1].GetBounds(g).X + 180, foreCastRegions[i - 1].GetBounds(g).Y + 25);
+                e.Graphics.DrawString("°C", new Font("Calibri", 12), Form1.midBlueBrush,
+                   foreCastRegions[i - 1].GetBounds(g).X + 195, foreCastRegions[i - 1].GetBounds(g).Y + 25);
 
-                e.Graphics.DrawString(Form1.days.Last().foreCastDates[i - 1].ToString("ddd").ToUpper(), new Font("Calibri", 12), midBlueBrush,
+                e.Graphics.DrawString(Form1.days.Last().foreCastDates[i - 1].ToString("ddd").ToUpper(), new Font("Calibri", 14), Form1.midBlueBrush,
                        foreCastRegions[i - 1].GetBounds(g).X + 350, foreCastRegions[i - 1].GetBounds(g).Y + 75);
-                e.Graphics.DrawString(Form1.days.Last().foreCastDates[i - 1].ToString("dd").ToUpper(), new Font("Calibri", 25), darkBlueBrush,
+                e.Graphics.DrawString(Form1.days.Last().foreCastDates[i - 1].ToString("dd").ToUpper(), new Font("Calibri", 25), Form1.darkBlueBrush,
                        foreCastRegions[i - 1].GetBounds(g).X + 345, foreCastRegions[i - 1].GetBounds(g).Y + 25);
             }
         }
